@@ -194,7 +194,7 @@ void PathPlanner::ChangeLane(bool too_close, double min_left_dist, double min_ri
 		}
 }
 
-void PathPlanner::GetVelocity(int lane, double ego_car_s, double ego_car_d, const vector<vector<double>>& sensor_fusion, int& prev_size, double& ref_vel, double& min_left_dist, double& min_right_dist, bool& too_close, double& closest)
+void PathPlanner::GetCurrentVelocity(int lane, double ego_car_s, double ego_car_d, const vector<vector<double>>& sensor_fusion, int& prev_size, double& ref_vel, double& min_left_dist, double& min_right_dist, bool& too_close, double& closest)
 {
 	int sensor_fusion_size = sensor_fusion.size();
 	double lane_size = 4 * lane;
