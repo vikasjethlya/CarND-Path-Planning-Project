@@ -12,7 +12,7 @@ class Helper
 {
 	public:
 
-		bool debug_print = true; //set to false to disable consle print
+		bool debug_print = false; //set to false to disable consle print
 
 		double pi();
 		double deg2rad(double x);
