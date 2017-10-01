@@ -171,3 +171,106 @@ vector<double> Helper::getXY(double s, double d, const vector<double> &maps_s, c
 		return {x,y};
 }
 
+/**
+* Prints a text
+*/
+void Helper::DebugInfo(const string& text)
+{
+	if (debug_print)
+	{
+		cout << text << endl;
+	}
+}
+
+/**
+* Prints Ego's data car
+*/
+void Helper::DebugInfoEgoCarData(double x, double y, double yaw, double speed, double s, double d, double ref_vel)
+{
+	if (debug_print)
+	{
+		cout << "\tx: " << x << "\ty: " << y
+			<< "\tyaw: " << yaw << "\tspeed: " << speed
+			<< "\ts: " << s << "\td: " << d
+			<< endl;
+		cout << "Ref Speed: " << ref_vel << "mph" << endl;
+	}
+}
+
+/**
+* Prints data for the other vehicles in the road
+*/
+void Helper::DebugInfoVehicleData(double ego_car_s, double ego_car_d, const vector<vector<double>>& sensor_fusion)
+{
+	if (debug_print)
+	{
+		for (int i = 0; i < sensor_fusion.size(); i++)
+		{
+			double id = sensor_fusion[i][0];
+			double x = sensor_fusion[i][1];
+			double y = sensor_fusion[i][2];
+			double vx = sensor_fusion[i][3];
+			double vy = sensor_fusion[i][4];
+			double s = sensor_fusion[i][5];
+			double d = sensor_fusion[i][6];
+			double distance = sqrt((ego_car_s - s) * (ego_car_s - s) + (ego_car_d - d) * (ego_car_d - d));
+			cout << "Car ID: " << id
+				<< "\tx: " << x << "\ty: " << y
+				<< "\tvx: " << vx << "\tvy: " << vy
+				<< "\ts: " << s << "\td: " << d
+				<< "\tdistance: " << distance
+				<< endl;
+		}
+
+	}
+}
+
+/**
+* Prints data for the closest obstacle
+*/
+void Helper::DebugInfoObstacleData(double min_left_dist, double min_right_dist, double closest, double too_close)
+{
+	if (debug_print)
+	{
+		cout << "------- OBSTACLES -------" << endl;
+		cout << "Left Distance: " << min_left_dist << "m" << endl;
+		cout << "Current lane Distance: " << closest << "m";
+		cout<<"\t\t Too close to collide : ";
+		if(too_close)
+		{
+			cout << "Yes" << endl;
+		}
+		else
+		{
+			cout << "No" << endl;
+		}
+		cout << "Right Distance: " << min_right_dist << "m" << endl;
+	}
+}
+
+/**
+* Prints data for the current lane
+*/
+void Helper::DebugInfoLaneData(int lane)
+{
+	if (debug_print)
+	{
+		cout << "------- LANE INFO -------" << endl;
+		cout << "Current lane: " ;
+		switch(lane)
+		{
+			case 0:
+				cout<<"Left";
+				break;
+			case 1:
+				cout << "Middle";
+				break;
+			case 2:
+				cout<< "Right";
+				break;
+			default:
+				cout<< "Invalid Lane";
+		}
+		cout<<endl;
+	}
+}

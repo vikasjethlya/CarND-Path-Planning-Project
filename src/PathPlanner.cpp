@@ -91,6 +91,7 @@ void PathPlanner::FollowLane(const vector<double>& map_waypoints_x, const vector
 		car_speed = (help.distance(prev_ref_x, prev_ref_y, ref_x, ref_y) / .02) * 2.237;
 
 		// Use the two points that make the path tangent to the previous's path end point
+
 		ptsx.push_back(prev_ref_x);
 		ptsx.push_back(ref_x);
 
@@ -249,34 +250,5 @@ void PathPlanner::GetCurrentVelocity(int lane, double ego_car_s, double ego_car_
 				}
 			}
 		}
-	}
-}
-
-void PathPlanner::DriveCar(double ego_car_x, double ego_car_y, double ego_car_yaw, double ego_car_speed, double ego_car_s, double ego_car_d, double end_path_s, const vector<vector<double>>& sensor_fusion, const vector<double>& map_waypoints_x, const vector<double>& map_waypoints_y, const vector<double>& map_waypoints_s, const vector<double>& previous_path_x, const vector<double>& previous_path_y, vector<double>& next_x_vals, vector<double>& next_y_vals, int& lane, int& keep_lane)
-{
-	bool too_close = false;
-	int prev_size = previous_path_x.size();
-	double ref_vel = speed_limit;
-	double min_right_dist = 999;
-	double min_left_dist = 999;
-	double closest = 999;
-
-	if (keep_lane > 0)
-	{
-		keep_lane -= 1;
-	}
-
-	if (prev_size > 0)
-	{
-		ego_car_s = end_path_s;
-	}
-
-	GetCurrentVelocity(lane, ego_car_s, ego_car_d, sensor_fusion, prev_size, ref_vel, min_left_dist, min_right_dist, too_close, closest);
-
-	FollowLane(map_waypoints_x, map_waypoints_y, map_waypoints_s, previous_path_x, previous_path_y, ego_car_x, ego_car_y, ego_car_yaw, ego_car_speed, ego_car_s, ref_vel, lane, next_x_vals, next_y_vals);
-
-	if (too_close)
-	{
-		ChangeLane(too_close, min_left_dist, min_right_dist, lane, keep_lane);
 	}
 }

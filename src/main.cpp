@@ -106,7 +106,44 @@ int main() {
           	vector<double> next_x_vals;
           	vector<double> next_y_vals;
 
-          	pathplanner.DriveCar(car_x, car_y, car_yaw, car_speed, car_s, car_d, end_path_s, sensor_fusion, map_waypoints_x, map_waypoints_y, map_waypoints_s, previous_path_x, previous_path_y, next_x_vals, next_y_vals, lane, keep_lane);
+          	bool too_close = false;
+			int prev_size = previous_path_x.size();
+			double ref_vel = 49.5;
+			double min_right_dist = 999;
+			double min_left_dist = 999;
+			double closest = 999;
+
+			if (keep_lane > 0)
+			{
+				keep_lane -= 1;
+			}
+
+			if (prev_size > 0)
+			{
+				car_s = end_path_s;
+			}
+
+			help.DebugInfo("-------Ego Car Info -------");
+
+			help.DebugInfoEgoCarData(car_x, car_y, car_yaw, car_speed, car_s, car_d, ref_vel);
+
+			help.DebugInfo("-------Other Car Info(Sensor Fusion) -------");
+			help.DebugInfoVehicleData(car_s, car_d, sensor_fusion);
+
+			pathplanner.GetCurrentVelocity(lane, car_s, car_d, sensor_fusion, prev_size, ref_vel, min_left_dist, min_right_dist, too_close, closest);
+
+			pathplanner.FollowLane(map_waypoints_x, map_waypoints_y, map_waypoints_s, previous_path_x, previous_path_y, car_x, car_y, car_yaw, car_speed, car_s, ref_vel, lane, next_x_vals, next_y_vals);
+
+			help.DebugInfoObstacleData(min_left_dist, min_right_dist, closest, too_close);
+
+			help.DebugInfoLaneData(lane);
+
+			if (too_close)
+			{
+				pathplanner.ChangeLane(too_close, min_left_dist, min_right_dist, lane, keep_lane);
+			}
+
+          	//pathplanner.DriveCar(car_x, car_y, car_yaw, car_speed, car_s, car_d, end_path_s, sensor_fusion, map_waypoints_x, map_waypoints_y, map_waypoints_s, previous_path_x, previous_path_y, next_x_vals, next_y_vals, lane, keep_lane);
 
           	// TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
           	msgJson["next_x"] = next_x_vals;
