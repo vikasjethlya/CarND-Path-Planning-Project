@@ -66,5 +66,5 @@ d) The car is able to slow down its speed when no lane change available and fron
 ### Conclusion :
 The car is able to run without any issue and done a reasonable job in driving, however there are lots of things can be improved :  
 a) There are cases where it does not take the wisest path.  
-b) I have not implemented separately cost function and finite state machine. This will help in dealing with more complex and real scenarios.
+b) I have not implemented separately cost function and finite state machine. This will help in dealing with more complex and real scenarios.  
 c) Incorporate a controller such as PID or MPC that follows the Path Planner's output path. 
