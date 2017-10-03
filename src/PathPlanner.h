@@ -24,8 +24,9 @@ class PathPlanner
 		double speed_limit = 49.5;
 		double side_dist = 20;
 		double closest_dist = 20;
-
+        double min_long_dist = 20.0;
 	public:
+        double long_dist = 999;
 
 		void FollowLane(const vector<double>& map_waypoints_x, const vector<double>& map_waypoints_y,
 				const vector<double>& map_waypoints_s, const vector<double>& previous_path_x,

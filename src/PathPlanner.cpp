@@ -12,7 +12,6 @@
 #include <math.h>
 
 using namespace std;
-
 using std::vector;
 
 
@@ -20,13 +19,13 @@ bool PathPlanner::IsChangeLaneSafe(int keep_lane, double min_left_dist, double m
 {
 	bool lane_change = false;
 
-	if (lane == 0 && min_right_dist >= side_dist && keep_lane == 0)
+	if (lane == 0 && min_right_dist >= side_dist && keep_lane == 0 && long_dist > min_long_dist)
 	{
 		lane += 1;
 		lane_change = true;
 	}
 
-	else if (lane == 1 && (min_left_dist >= side_dist || min_right_dist >= side_dist) && keep_lane == 0)
+	else if (lane == 1 && (min_left_dist >= side_dist || min_right_dist >= side_dist) && keep_lane == 0 && long_dist > min_long_dist )
 	{
 		if (min_left_dist > min_right_dist)
 		{
@@ -38,7 +37,7 @@ bool PathPlanner::IsChangeLaneSafe(int keep_lane, double min_left_dist, double m
 		}
 		lane_change = true;
 	}
-	else if (lane == 2 && min_left_dist >= side_dist && keep_lane == 0)
+	else if (lane == 2 && min_left_dist >= side_dist && keep_lane == 0 && long_dist > min_long_dist)
 	{
 		lane -= 1;
 		lane_change = true;
@@ -199,7 +198,7 @@ void PathPlanner::GetCurrentVelocity(int lane, double ego_car_s, double ego_car_
 {
 	int sensor_fusion_size = sensor_fusion.size();
 	double lane_size = 4 * lane;
-
+    long_dist = 999;
 	Helper help;
 
 	for (int i = 0; i < sensor_fusion_size; i++)
@@ -222,14 +221,14 @@ void PathPlanner::GetCurrentVelocity(int lane, double ego_car_s, double ego_car_
 			min_left_dist = distance;
 		}
 
+        double check_speed = sqrt(car_vx * car_vx + car_vy * car_vy);
+        
+        double check_car_s = car_s;
+        
+        check_car_s += ((double)prev_size * .02 * check_speed);
+        
 		if (car_d < (2 + lane_size + 2) && car_d > (2+ lane_size - 2))
 		{
-			double check_speed = sqrt(car_vx * car_vx + car_vy * car_vy);
-
-			double check_car_s = car_s;
-
-			check_car_s += ((double)prev_size * .02 * check_speed);
-
 			if (check_car_s > ego_car_s)
 			{
 				closest = check_car_s - ego_car_s;
@@ -250,5 +249,10 @@ void PathPlanner::GetCurrentVelocity(int lane, double ego_car_s, double ego_car_
 				}
 			}
 		}
+        if (check_car_s < ego_car_s && (ego_car_s - check_car_s) < long_dist)
+        {
+            long_dist = ego_car_s - check_car_s;
+            cout << " S distance :" << long_dist << endl;
+        }
 	}
 }
